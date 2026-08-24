@@ -15,14 +15,14 @@ def generate_code_using_bedrock(message:str, language:str) -> str:
         "temperature": 0.1,
         "top_k": 250,
         "top_p": 0.2,
-        "stop_sequence": ["\n\nHuman:"]
+        "stop_sequences": ["..."]
     }
     
     try:
-        bedrock = boto3.client("bedrock-runtime",region_name="eu-north-1", config = botocore.config.Config(read_timeout=300, retires = {'max_attempts':3}))
-        response = bedrock.invoke_model(body=json.dump(body),modelId="qwen.qwen3-coder-30b-a3b-instruct")
+        bedrock = boto3.client("bedrock-runtime",region_name="us-east-1", config = botocore.config.Config(read_timeout=300, retries = {'max_attempts':3}))
+        response = bedrock.invoke_model(body=json.dumps(body),modelId="anthropic.claude-haiku-4-5-20251001-v1:0")
         response_content = response.get('body').read().decode('utf-8')
-        response_data = json.load(response_content)
+        response_data = json.loads(response_content)
         code = response_data["completion"].strip()
         return code
     
@@ -61,6 +61,9 @@ def lambda_handler(event, context):
 
     return {
         'statusCode':200,
-        'body': json.dump('Code generation Complere')
+        'body': json.dumps({
+            'message': 'Code generation Complete',
+            'code': generate_code
+            })
     }
         
