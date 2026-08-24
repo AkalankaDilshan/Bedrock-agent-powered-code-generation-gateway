@@ -42,7 +42,7 @@ def save_code_to_s3_bucket(code, s3_bucket, s3_key):
         
         
 def lambda_handler(event, context):
-    event= json.load(event['body'])
+    event= json.loads(event['body'])
     message = event['message']
     language = event['language']
     print(message, language)
