@@ -29,3 +29,13 @@ def generate_code_using_bedrock(message:str, language:str) -> str:
     except Exception as e:
         print("Error generating the code")
         return ""
+
+def code_save_to_s3_bucket(code, s3_bucket, s3_key):
+    s3 = boto3.client('s3')
+    
+    try:
+        s3.put_object(Bucket= s3_bucket, Key= s3_key, Body= code)
+        print("Code save to s3")
+        
+    except Exception as e:
+        print("Error when saving the code to s3")
