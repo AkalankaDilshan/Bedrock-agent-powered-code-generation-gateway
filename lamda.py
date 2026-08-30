@@ -6,6 +6,8 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+MODEL_ID = "anthropic.claude-haiku-4-5-20251001-v1:0"
+
 def generate_code_using_bedrock(message:str, language:str) -> str:
     
     promt_text = f"Write {language} code for following instructions: {message}."
@@ -22,7 +24,7 @@ def generate_code_using_bedrock(message:str, language:str) -> str:
     
     try:
         bedrock = boto3.client("bedrock-runtime",region_name="us-east-1", config = botocore.config.Config(read_timeout=300, retries = {'max_attempts':3}))
-        response = bedrock.invoke_model(body=json.dumps(body),modelId="anthropic.claude-haiku-4-5-20251001-v1:0")
+        response = bedrock.invoke_model(body=json.dumps(body),modelId= MODEL_ID)
         response_content = response.get('body').read().decode('utf-8')
         response_data = json.loads(response_content)
         code = response_data["content"][0]["text"].strip()
