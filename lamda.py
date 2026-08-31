@@ -6,14 +6,15 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-MODEL_ID = "anthropic.claude-haiku-4-5-20251001-v1:0"
+# application-specific inference profiles
+MODEL_ID = "global.anthropic.claude-haiku-4-5-20251001-v1:0"
 
 def generate_code_using_bedrock(message:str, language:str) -> str:
     
     promt_text = f"Write {language} code for following instructions: {message}."
     body = {
         'anthropic_version': 'bedrock-2023-05-31',
-        'max_tokens_to_sample': 2048,
+        'max_tokens': 2048,
         'temperature': 0.1,
         'top_k': 250,
         #"top_p": 0.2,
