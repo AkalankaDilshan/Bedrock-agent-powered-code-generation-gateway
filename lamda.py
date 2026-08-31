@@ -43,7 +43,8 @@ def save_code_to_s3_bucket(code, s3_bucket, s3_key):
         print("Code save to s3")
         
     except Exception as e:
-        print("Error when saving the code to s3")
+        logger.error(f'Error when saving the code to s3: {e}')
+        raise
         
         
 def lambda_handler(event, context):
@@ -54,15 +55,15 @@ def lambda_handler(event, context):
     
     generate_code = generate_code_using_bedrock(message, language)
     
-    # if generate_code:
-    #     current_time = datetime.now().strftime('%H:%M:%S')
-    #     s3_key = f'code-output/{current_time}.py' # meka change krnna oni
-    #     s3_bucket = 'bedrock-codegen-bucket-3456' #my bucke name
+    if generate_code:
+        current_time = datetime.now().strftime('%H:%M:%S')
+        s3_key = f'code-output/{current_time}.py' # meka change krnna oni
+        s3_bucket = 'bedrock-codegen-bucket-3456' #my bucke name
         
-    #     save_code_to_s3_bucket(s3_bucket=s3_bucket,s3_key=s3_key, code= generate_code)
+        save_code_to_s3_bucket(s3_bucket=s3_bucket,s3_key=s3_key, code= generate_code)
     
-    # else:
-    #     print("No code was generated")
+    else:
+        print("No code was generated")
 
     return {
         'statusCode':200,
